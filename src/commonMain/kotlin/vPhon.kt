@@ -1,4 +1,8 @@
-﻿//coding: utf-8
+﻿import rules.Central
+import rules.North
+import rules.South
+
+//coding: utf-8
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //       vPhon.py version 0.2.6
@@ -21,27 +25,27 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // for python 3-style printing:
-from __future__ import print_function
+/*from __future__ import print_function
 
 import sys, codecs, re, StringIO
 from optparse import OptionParser
-from string import punctuation
+from string import punctuation*/
 
-fun trans(word, dialect, glottal, pham, cao, palatals):
+fun trans(word:String, dialect:Char, glottal, pham:Boolean, cao:Boolean, palatals) {
 
     // This looks ugly, but newer versions of python complain about "from x import *" syntax
-    if dialect == 'n':
-        from north import onsets, nuclei, codas, tones, onglides, offglides, onoffglides, qu, gi
-    elif dialect == 'c':
-        from central import onsets, nuclei, codas, tones, onglides, offglides, onoffglides, qu, gi
-    elif dialect == 's':
-        from south import onsets, nuclei, codas, tones, onglides, offglides, onoffglides, qu, gi
+    val rules = when (dialect) {
+        'n' -> North
+        'c' -> Central
+        's' -> South
+    }
 
-    if pham or cao:
-        if dialect == 'n': from north import tones_p
-        if dialect == 'c': from central import tones_p
-        if dialect == 's': from south import tones_p
+    if (pham || cao) {
+        if (dialect == 'n') { from north import tones_p}
+        if (dialect == 'c') { from central import tones_p}
+        if (dialect == 's') { from south import tones_p}
         tones = tones_p
+    }
 
     ons = ''
     nuc = ''
@@ -49,177 +53,210 @@ fun trans(word, dialect, glottal, pham, cao, palatals):
     ton = 0
     oOffset = 0
     cOffset = 0 
-    l = len(word)
+    val l = word.length
 
-    if l > 0:
-        if word[0:3] in onsets:         // if onset is 'ngh'
+    if (l > 0) {
+        if (word[0:3] in onsets) {         // if onset is 'ngh'
             ons = onsets[word[0:3]]
             oOffset = 3
-        elif word[0:2] in onsets:       // if onset is 'nh', 'gh', 'kʷ' etc
+        } else if (word[0:2] in onsets) {       // if onset is 'nh', 'gh', 'kʷ' etc
             ons = onsets[word[0:2]]
             oOffset = 2
-        elif word[0] in onsets:         // if single onset
+        } else if (word[0] in onsets) {         // if single onset
             ons = onsets[word[0]]
             oOffset = 1
+        }
 
-        if word[l-2:l] in codas:        // if two-character coda
+        if (word[l-2:l] in codas) {        // if two-character coda
             cod = codas[word[l-2:l]]
             cOffset = 2
-        elif word[l-1] in codas:        // if one-character coda
+        } else if (word[l-1] in codas) {        // if one-character coda
             cod = codas[word[l-1]]
             cOffset = 1
+        }
                             
 
-        //if word[0:2] == u'gi' and cod and len(word) == 3:  // if you just have 'gi' and a coda...
-        if word[0:2] in gi and cod and len(word) == 3:  // if you just have 'gi' and a coda...
-            nucl = u'i'
-            ons = u'z'
-        else:
+        //if word[0:2] == "gi" and cod and len(word) == 3:  // if you just have 'gi' and a coda...
+        if (word[0:2] in gi && cod && len(word) == 3) {  // if you just have 'gi' and a coda...
+            nucl = "i"
+            ons = "z"
+        } else {
             nucl = word[oOffset:l-cOffset]
+        }
 
-        if nucl in nuclei:
-            if oOffset == 0:
-                if glottal == 1:
-                    if word[0] not in onsets:   // if there isn't an onset....  
-                        ons = u'ʔ'+nuclei[nucl] // add a glottal stop
-                    else:                       // otherwise...
+        if (nucl in nuclei) {
+            if (oOffset == 0) {
+                if (glottal == 1) {
+                    if (word[0] not in onsets) {   // if there isn't an onset....  
+                        ons = "ʔ"+nuclei[nucl] // add a glottal stop
+                    } else {
                         nuc = nuclei[nucl]      // there's your nucleus 
-                else: 
+                    }
+                } else {
                     nuc = nuclei[nucl]          // there's your nucleus 
-            else:                               // otherwise...
+                }
+            } else {
                 nuc = nuclei[nucl]              // there's your nucleus
+            }
         
-        elif nucl in onglides and ons != u'kw': // if there is an onglide...
+        } else if (nucl in onglides && ons != "kw") { // if there is an onglide...
             nuc = onglides[nucl]                // modify the nuc accordingly
-            if ons:                             // if there is an onset...
-                ons = ons+u'w'                  // labialize it, but...
-            else:                               // if there is no onset...
-                ons = u'w'                      // add a labiovelar onset 
-
-        elif nucl in onglides and ons == u'kw': 
+            if (ons) {                             // if there is an onset...
+                ons = ons+"w"                  // labialize it, but...
+            } else {
+                ons = "w"                      // add a labiovelar onset 
+            }
+        } else if (nucl in onglides && ons == "kw") {
             nuc = onglides[nucl]
-                
-        elif nucl in onoffglides:
+        } else if (nucl in onoffglides) {
             cod = onoffglides[nucl][-1]
             nuc = onoffglides[nucl][0:-1]
-            if ons != u'kw':
-                if ons:
-                    ons = ons+u'w'
-                else:
-                    ons = u'w'
-        elif nucl in offglides:
+            if (ons != "kw") {
+                if (ons) {
+                    ons = ons+"w"
+                } else {
+                    ons = "w"
+                }
+            }
+        } else if (nucl in offglides) {
             cod = offglides[nucl][-1]
             nuc = offglides[nucl][:-1]
-                
-        elif word in gi:      // if word == 'gi', 'gì',...
+
+        } else if (word in gi) {      // if word == 'gi', 'gì',...
             ons = gi[word][0]
             nuc = gi[word][1]
 
-        elif word in qu:      // if word == 'quy', 'qúy',...
+        } else if (word in qu) {      // if word == 'quy', 'qúy',...
             ons = qu[word][:-1]
             nuc = qu[word][-1]
                 
-        else:   
+        } else {
             // Something is non-Viet
             return (None, None, None, None)
-
+        }
 
         // Velar Fronting (Northern dialect)
-        if dialect == 'n':
-            if nuc == u'a':
-                if cod == u'k' and cOffset == 2: nuc = u'ɛ'
-                if cod == u'ɲ' and nuc == u'a': nuc = u'ɛ'
+        if (dialect == 'n') {
+            if (nuc == "a") {
+                if (cod == "k" && cOffset == 2) { nuc = "ɛ"}
+                if (cod == "ɲ" && nuc == "a") { nuc = "ɛ"}
+            }
 
             // Final palatals (Northern dialect)
-            if nuc not in [u'i', u'e', u'ɛ']:
-                if cod == u'ɲ': cod = u'ŋ'
-            elif palatals != 1 and nuc in [u'i', u'e', u'ɛ']:
-                if cod == u'ɲ': cod = u'ŋ'
-            if palatals == 1:
-                if cod == u'k' and nuc in [u'i', u'e', u'ɛ']: cod = u'c'
+            if (nuc not in ["i", "e", "ɛ"]) {
+                if (cod == "ɲ") { cod = "ŋ"}
+            } else if (palatals != 1 && nuc in ["i", "e", "ɛ"]) {
+                if (cod == "ɲ") { cod = "ŋ"}
+            }
+
+            if (palatals == 1) {
+                if (cod == "k" && nuc in ["i", "e", "ɛ"]) {
+                    cod = "c"
+                }
+            }
 
         // Velar Fronting (Southern and Central dialects)
-        else:
-            if nuc in [u'i', u'e']:
-                if cod == u'k': cod = u't'
-                if cod == u'ŋ': cod = u'n'
+        } else {
+            if (nuc in ["i", "e"]) {
+                if (cod == "k") { cod = "t"}
+                if (cod == "ŋ") { cod = "n"}
+            }
 
             // There is also this reverse fronting, see Thompson 1965:94 ff.
-            elif nuc in [u'iə', u'ɯə', u'uə', u'u', u'ɯ', u'ɤ', u'o', u'ɔ', u'ă', u'ɤ̆']:
-                if cod == u't': 
-                    cod = u'k'
-                if cod == u'n': cod = u'ŋ'
+            } else if (nuc in ["iə", "ɯə", "uə", "u", "ɯ", "ɤ", "o", "ɔ", "ă", "ɤ̆"]) {
+                if (cod == "t") { 
+                    cod = "k"
+                }
+                if (cod == "n") { 
+                    cod = "ŋ"
+                }
+            }
 
         // Monophthongization (Southern dialects: Thompson 1965: 86; Hoàng 1985: 181)
-        if dialect == 's':
-            if cod in [u'm', u'p']:
-                if nuc == u'iə': nuc = u'i'
-                if nuc == u'uə': nuc = u'u'
-                if nuc == u'ɯə': nuc = u'ɯ'
+        if (dialect == 's') {
+            if (cod in ["m", "p"]) {
+                if (nuc == "iə") { nuc = "i"}
+                if (nuc == "uə") { nuc = "u"}
+                if (nuc == "ɯə") { nuc = "ɯ"}
+            }
+        }
 
         // Tones 
         // Modified 20 Sep 2008 to fix aberrant 33 error
         tonelist = [tones[word[i]] for i in xrange(0,l) if word[i] in tones]
-        if tonelist:
+        if (tonelist) {
             ton = unicode(tonelist[len(tonelist)-1])
-        else:
-            if not (pham or cao):
-                if dialect == 'c':
+        } else {
+            if (not (pham || cao)) {
+                if (dialect == 'c') {
                     ton = unicode('35')
-                else:
+                } else {
                     ton = unicode('33')
-            else:
+                }
+            } else {
                 ton = unicode('1')
+            }
+        }
             
         // Modifications for closed syllables
-        if cOffset !=0:
+        if (cOffset !=0) {
 
             // Obstruent-final nang tones are modal voice
-            if (dialect == 'n' or dialect == 's') and ton == u'21g' and cod in ['p', 't', 'k']:
-                //if ton == u'21\u02C0' and cod in ['p', 't', 'k']: // fixed 8 Nov 2016
-                ton = u'21'
+            if ((dialect == 'n' || dialect == 's') && ton == "21g" && cod in ['p', 't', 'k']) {
+                //if ton == "21\u02C0" and cod in ['p', 't', 'k']: // fixed 8 Nov 2016
+                ton = "21"
+            }
 
             // Modification for sắc in closed syllables (Northern and Central only)
-            if ((dialect == 'n' and ton == u'24') or (dialect == 'c' and ton == u'13')) and cod in ['p', 't', 'k']:
-                ton = u'45'
+            if (((dialect == 'n' && ton == "24") || (dialect == 'c' && ton == "13")) && cod in ['p', 't', 'k']) {
+                ton = "45"
+            }
 
             // Modification for 8-tone system
-            if cao == 1:
-                if ton == u'5' and cod in ['p', 't', 'k']:
-                    ton = u'5b'
-                if ton == u'6' and cod in ['p', 't', 'k']:
-                    ton = u'6b'
+            if (cao == 1) {
+                if (ton == "5" && cod in ['p', 't', 'k']) {
+                    ton = "5b"
+                }
+                if (ton == "6" && cod in ['p', 't', 'k']) {
+                    ton = "6b"
+                }
+            }
 
             // labialized allophony (added 17.09.08)
-            if nuc in [u'u', u'o', u'ɔ']:
-                if cod == u'ŋ':
-                    cod = u'ŋ͡m' 
-                if cod == u'k':
-                    cod = u'k͡p'
-
+            if (nuc in ["u", "o", "ɔ"]) {
+                if (cod == "ŋ") {
+                    cod = "ŋ͡m"
+                }
+                if (cod == "k") {
+                    cod = "k͡p"
+                }
+            }
+        }
         return (ons, nuc, cod, ton)
-    
-fun convert(word, dialect, glottal, pham, cao, palatals, delimit):
-    """Convert a single orthographic string to IPA."""
+    }
+}
 
+/**Convert a single orthographic string to IPA.*/
+fun convert(word, dialect, glottal, pham, cao, palatals, delimit) {
     ons = ''
     nuc = ''
     cod = ''
     ton = 0
     seq = ''
 
-    try:
+    try {
         (ons, nuc, cod, ton) = trans(word, dialect, glottal, pham, cao, palatals)
-        if None in (ons, nuc, cod, ton):
-            seq = u'['+word+u']'
-        else:
+        if (None in (ons, nuc, cod, ton)) {
+            seq = "["+word+"]"
+        } else {
             seq = delimit+delimit.join(filter(None, (ons, nuc, cod, ton)))+delimit
-    except (TypeError), e:
-        pass
+        }
+    }
+    catch (e:TypeError){}
 
     return seq
-            
-fun main():
+}
+fun main() {
     sys.path.append('./Rules')      // make sure we can find the Rules files
 
     usage = 'python vPhon.py <input> -d, --dialect N|C|S'
@@ -244,80 +281,95 @@ fun main():
     parser.add_option('-d', '--dialect', action='store', type='string', dest='dialect', help='specify dialect region ([N]orthern, [C]entral, [S]outhern)')
     (options, args) = parser.parse_args()
 
-    if options.glottal:
+    if (options.glottal) {
         glottal = 1
-    if options.pham:
+    }
+    if (options.pham) {
         pham = 1
-    if options.cao:
+    }
+    if (options.cao) {
         cao = 1
-    if options.palatals:
+    }
+    if (options.palatals) {
         palatals = 1
-    if options.tokenize:
+    }
+    if (options.tokenize) {
         tokenize = 1
-    if options.output_ortho:
+    }
+    if (options.output_ortho) {
         output_ortho = 1
-    if options.delimit:
+    }
+    if (options.delimit) {
         delimit = options.delimit[0]
-    if options.dialect:
+    }
+    if (options.dialect) {
         dialect = options.dialect[0].lower()
-    else:
+    } else {
         parser.error('Please enter a valid dialect.')
-    if dialect not in ['n', 'c', 's']:
+    }
+    if (dialect not in ['n', 'c', 's']) {
         parser.error('Please enter a valid dialect.')
+    }
 
 
     // read from stdin
     fh = StringIO.StringIO(unicode(sys.stdin.read(), 'utf-8'))
 
     // parse the input
-    for line in fh:
-        if line =='\n':
+    for (line in fh) {
+        if (line =='\n') {
             pass
-        else:
+        } else {
             compound = u''
             ortho = u'' 
             words = line.split()
             //// toss len==0 junk
             words = [word for word in words if len(word)>0]
             //// hack to get rid of single hyphens or underscores
-            words = [word for word in words if word!=u'-']
-            words = [word for word in words if word!=u'_']
-            for i in xrange(0,len(words)):
+            words = [word for word in words if word!="-"]
+            words = [word for word in words if word!="_"]
+            for (i in xrange(0,len(words))) {
                 word = words[i].strip()
                 ortho += word
                 word = word.strip(punctuation).lower()
                 //// 29.03.16: check if tokenize is true
                 //// if true, call this routine for each substring
                 //// and re-concatenate 
-                if (tokenize and '-' in word) or (tokenize and '_' in word):
+                if ((tokenize && '-' in word) || (tokenize && '_' in word)) {
                     substrings = re.split(r'(_|-)', word)
                     values = substrings[::2]
                     delimiters = substrings[1::2] + ['']
                     ipa = [convert(x, dialect, glottal, pham, cao, palatals, delimit).strip() for x in values]
                     seq = ''.join(v+d for v,d in zip(ipa, delimiters))
-                else:
+                } else {
                     seq = convert(word, dialect, glottal, pham, cao, palatals, delimit).strip()
+                }
                 // concatenate
-                if len(words) >= 2:
+                if (len(words) >= 2) {
                     ortho += ' '
-                if i < len(words)-1:
-                    seq = seq+u' '
+                }
+                if (i < len(words)-1) {
+                    seq = seq+" "
+                }
                 compound = compound + seq
-            
+            }
             //// entire line has been parsed
-            if ortho == u'':
+            if (ortho == u'') {
                 pass
-            else:
+            } else {
                 ortho = ortho.strip()
                 //// print orthography?
-                if output_ortho: print(ortho.encode('utf-8'), end=','),
+                if (output_ortho) { print(ortho.encode('utf-8'), end=',')}
                 print(compound.encode('utf-8'))
-
+            }
+        }
+    }
     // If we have an open filehandle, close it
-    try:     
+    try {
         fh.close()
-    except AttributeError:
-        sys.exit(0)
+    }
+    catch (ae:AttributeError) {
+        System.exit(0)
+    }
+}
 
-if __name__ == '__main__':
-    main()
