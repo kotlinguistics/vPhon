@@ -1,10 +1,12 @@
-# vPhon: a Vietnamese phonetizer
+# vPhonKotlin: a Vietnamese phonetizer
 
-Package: vPhon version 0.2.6
+Original Author: James Kirby <j.kirby@ed.ac.uk>
 
-Author: James Kirby <j.kirby@ed.ac.uk>
+This is a port of [James Kirby](https://github.com/kirbyj)'s [vPhon](https://github.com/kirbyj/vPhon) program to Multiplatform Kotlin.
 
-Web: https://github.com/kirbyj/vPhon
+The remainder of the original README is below.
+
+-----------
 
 This software takes UTF-8 Vietnamese orthography and returns broad transcription UTF-8 output in the International Phonetic Association (IPA) alphabet for three major dialects of Vietnamese: Northern (Hà Nội), Central (Huế), and Southern (Sài Gòn) speech.
 
