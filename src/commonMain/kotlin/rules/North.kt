@@ -1,6 +1,7 @@
-﻿//coding: utf-8
-object North {
-	val onsets = mapOf(
+﻿package rules
+
+object North:RuleSet {
+	override val onsets = mapOf(
 		"b" to "b", "t" to "t", "th" to "tʰ", "đ" to "d", "ch" to "c",
 		"kh" to "x", "g" to "ɣ", "l" to "l", "m" to "m", "n" to "n",
 		"ngh" to "ŋ", "nh" to "ɲ", "ng" to "ŋ", "ph" to "f", "v" to "v",
@@ -10,7 +11,7 @@ object North {
 	)
 
 
-	val nuclei = mapOf(
+	override val nuclei = mapOf(
 		"a" to "a", "á" to "a", "à" to "a", "ả" to "a", "ã" to "a", "ạ" to "a",
 		"â" to "ɤ̆", "ấ" to "ɤ̆", "ầ" to "ɤ̆", "ẩ" to "ɤ̆", "ẫ" to "ɤ̆", "ậ" to "ɤ̆",
 		"ă" to "ă", "ắ" to "ă", "ằ" to "ă", "ẳ" to "ă", "ẵ" to "ă", "ặ" to "ă",
@@ -43,7 +44,7 @@ object North {
 		)
 
 
-	val offglides = mapOf(
+	override val offglides = mapOf(
 		"ai" to "aj", "ái" to "aj", "ài" to "aj", "ải" to "aj", "ãi" to "aj", "ại" to "aj",
 		"ay" to "ăj", "áy" to "ăj", "ày" to "ăj", "ảy" to "ăj", "ãy" to "ăj", "ạy" to "ăj",
 		"ao" to "aw", "áo" to "aw", "ào" to "aw", "ảo" to "aw", "ão" to "aw", "ạo" to "aw",
@@ -68,7 +69,7 @@ object North {
 
 	)
 
-	val onglides = mapOf(
+	override val onglides = mapOf(
 		"oa" to "a", "oá" to "a", "oà" to "a", "oả" to "a", "oã" to "a", "oạ" to "a",
 		"óa" to "a", "òa" to "a", "ỏa" to "a", "õa" to "a", "ọa" to "a",
 		"oă" to "ă", "oắ" to "ă", "oằ" to "ă", "oẳ" to "ă", "oẵ" to "ă", "oặ" to "ă",
@@ -90,7 +91,7 @@ object North {
 
 	)
 
-	val onoffglides = mapOf(
+	override val onoffglides = mapOf(
 		"oe" to "ej", "oé" to "ej", "oè" to "ej", "oẻ" to "ej", "oẽ" to "ej", "oẹ" to "ej",
 		"oai" to "aj", "oái" to "aj", "oài" to "aj", "oải" to "aj", "oãi" to "aj", "oại" to "aj",
 		"oay" to "ăj", "oáy" to "ăj", "oày" to "ăj", "oảy" to "ăj", "oãy" to "ăj", "oạy" to "ăj",
@@ -104,7 +105,7 @@ object North {
 
 	)
 
-	val codas = mapOf(
+	override val codas = mapOf(
 		"p" to "p", "t" to "t", "c" to "k", "m" to "m", "n" to "n", "ng" to "ŋ", "nh" to "ɲ", "ch" to "k"
 	)
 
@@ -123,7 +124,7 @@ object North {
 //				"y" to 33, "ý" to 24, "ỳ" to 32, "ỷ" to 312, "ỹ" to "35g", "ỵ" to "21g",
 //			  
 
-	val tones = mapOf(
+	override val tones = mapOf(
 		"á" to 24, "à" to 32, "ả" to 312, "ã" to "35g", "ạ" to "21g",
 		"ấ" to 24, "ầ" to 32, "ẩ" to 312, "ẫ" to "35g", "ậ" to "21g",
 		"ắ" to 24, "ằ" to 32, "ẳ" to 312, "ẵ" to "35g", "ặ" to "21g",
@@ -140,7 +141,7 @@ object North {
 		)
 // used to use \u02C0 for the unicode raised glottal character
 
-	val tones_p = mapOf(
+	override val tones_p = mapOf(
 		"á" to 5, "à" to 2, "ả" to 4, "ã" to 3, "ạ" to 6,
 		"ấ" to 5, "ầ" to 2, "ẩ" to 4, "ẫ" to 3, "ậ" to 6,
 		"ắ" to 5, "ằ" to 2, "ẳ" to 4, "ẵ" to 3, "ặ" to 6,
@@ -156,11 +157,11 @@ object North {
 
 		)
 
-	val gi = mapOf(
+	override val gi = mapOf(
 		"gi" to "zi", "gí" to "zi", "gì" to "zi", "gì" to "zi", "gĩ" to "zi", "gị" to "zi"
 	)
 
-	val qu = mapOf(
+	override val qu = mapOf(
 		"quy" to "kwi", "qúy" to "kwi", "qùy" to "kwi", "qủy" to "kwi", "qũy" to "kwi", "qụy" to "kwi"
 	)
 

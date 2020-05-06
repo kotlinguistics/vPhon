@@ -1,6 +1,6 @@
-﻿
-object South {
-	val onsets = mapOf(
+﻿package rules
+object South: RuleSet {
+	override val onsets = mapOf(
 		"b" to "b", "t" to "t", "th" to "tʰ", "đ" to "d", "ch" to "c",
 		"kh" to "x", "g" to "ɣ", "l" to "l", "m" to "m", "n" to "n",
 		"ngh" to "ŋ", "nh" to "ɲ", "ng" to "ŋ", "ph" to "f", "v" to "j",
@@ -10,7 +10,7 @@ object South {
 	)
 
 
-	val nuclei = mapOf(
+	override val nuclei = mapOf(
 		"a" to "a",
 		"á" to "a",
 		"à" to "a",
@@ -177,7 +177,7 @@ object South {
 		)
 
 
-	val offglides = mapOf(
+	override val offglides = mapOf(
 		"ai" to "aj", "ái" to "aj", "ài" to "aj", "ải" to "aj", "ãi" to "aj", "ại" to "aj",
 		"ay" to "ăj", "áy" to "ăj", "ày" to "ăj", "ảy" to "ăj", "ãy" to "ăj", "ạy" to "ăj",
 		"ao" to "aw", "áo" to "aw", "ào" to "aw", "ảo" to "aw", "ão" to "aw", "ạo" to "aw",
@@ -202,7 +202,7 @@ object South {
 
 	)
 
-	val onglides = mapOf(
+	override val onglides = mapOf(
 		"oa" to "a", "oá" to "a", "oà" to "a", "oả" to "a", "oã" to "a", "oạ" to "a",
 		"óa" to "a", "òa" to "a", "ỏa" to "a", "õa" to "a", "ọa" to "a",
 		"oă" to "ă", "oắ" to "ă", "oằ" to "ă", "oẳ" to "ă", "oẵ" to "ă", "oặ" to "ă",
@@ -224,7 +224,7 @@ object South {
 
 	)
 
-	val onoffglides = mapOf(
+	override val onoffglides = mapOf(
 		"oe" to "ej", "oé" to "ej", "oè" to "ej", "oẻ" to "ej", "oẽ" to "ej", "oẹ" to "ej",
 		"oai" to "aj", "oái" to "aj", "oài" to "aj", "oải" to "aj", "oãi" to "aj", "oại" to "aj",
 		"oay" to "ăj", "oáy" to "ăj", "oày" to "ăj", "oảy" to "ăj", "oãy" to "ăj", "oạy" to "ăj",
@@ -238,11 +238,11 @@ object South {
 
 	)
 
-	val codas = mapOf(
+	override val codas = mapOf(
 		"p" to "p", "t" to "t", "c" to "k", "m" to "m", "n" to "ŋ", "ng" to "ŋ", "nh" to "n", "ch" to "t"
 	)
 
-	val tones = mapOf(
+	override val tones = mapOf(
 		"á" to 45, "à" to 32, "ả" to 214, "ã" to 214, "ạ" to 212,
 		"ấ" to 45, "ầ" to 32, "ẩ" to 214, "ẫ" to 214, "ậ" to 212,
 		"ắ" to 45, "ằ" to 32, "ẳ" to 214, "ẵ" to 214, "ặ" to 212,
@@ -258,7 +258,7 @@ object South {
 
 		)
 
-	val tones_p = mapOf(
+	override val tones_p = mapOf(
 		"á" to 5, "à" to 2, "ả" to 4, "ã" to 4, "ạ" to 6,
 		"ấ" to 5, "ầ" to 2, "ẩ" to 4, "ẫ" to 4, "ậ" to 6,
 		"ắ" to 5, "ằ" to 2, "ẳ" to 4, "ẵ" to 4, "ặ" to 6,
@@ -274,11 +274,11 @@ object South {
 		)
 
 
-	val gi = mapOf(
+	override val gi = mapOf(
 		"gi" to "ji", "gí" to "ji", "gì" to "ji", "gì" to "ji", "gĩ" to "ji", "gị" to "ji"
 	)
 
-	val qu = mapOf(
+	override val qu = mapOf(
 		"quy" to "wi", "qúy" to "wi", "qùy" to "wi", "qủy" to "wi", "qũy" to "wi", "qụy" to "wi"
 	)
 }

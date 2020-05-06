@@ -1,6 +1,8 @@
-﻿object Central {
+﻿package rules
 
-    val onsets = mapOf(
+object Central:RuleSet {
+
+    override val onsets = mapOf(
         "b" to "b", "t" to "t", "th" to "tʰ", "đ" to "d", "ch" to "c",
         "kh" to "x", "g" to "ɣ", "l" to "l", "m" to "m", "n" to "n",
         "ngh" to "ŋ", "nh" to "ɲ", "ng" to "ŋ", "ph" to "f", "v" to "j",
@@ -9,7 +11,7 @@
         "r" to "ʐ", "s" to "ʂ", "gi" to "j"
     )
 
-    val nuclei = mapOf(
+    override val nuclei = mapOf(
         "a" to "a", "á" to "a", "à" to "a", "ả" to "a", "ã" to "a", "ạ" to "a",
         "â" to "ɤ̆", "ấ" to "ɤ̆", "ầ" to "ɤ̆", "ẩ" to "ɤ̆", "ẫ" to "ɤ̆", "ậ" to "ɤ̆",
         "ă" to "ă", "ắ" to "ă", "ằ" to "ă", "ẳ" to "ă", "ẵ" to "ă", "ặ" to "ă",
@@ -40,7 +42,7 @@
         "uơ" to "uə", "uở" to "uə", "uờ" to "uə", "uở" to "uə", "uỡ" to "uə", "uợ" to "uə"
     )
 
-    val offglides = mapOf(
+    override val offglides = mapOf(
         "ai" to "aj", "ái" to "aj", "ài" to "aj", "ải" to "aj", "ãi" to "aj", "ại" to "aj",
         "ay" to "ăj", "áy" to "ăj", "ày" to "ăj", "ảy" to "ăj", "ãy" to "ăj", "ạy" to "ăj",
         "ao" to "aw", "áo" to "aw", "ào" to "aw", "ảo" to "aw", "ão" to "aw", "ạo" to "aw",
@@ -64,7 +66,7 @@
         "ươu" to "ɯəw", "ướu" to "ɯəw", "ườu" to "ɯəw", "ưởu" to "ɯəw", "ưỡu" to "ɯəw", "ượu" to "ɯəw"
     )
 
-    val onglides = mapOf(
+    override val onglides = mapOf(
         "oa" to "a", "oá" to "a", "oà" to "a", "oả" to "a", "oã" to "a", "oạ" to "a",
         "óa" to "a", "òa" to "a", "ỏa" to "a", "õa" to "a", "ọa" to "a",
         "oă" to "ă", "oắ" to "ă", "oằ" to "ă", "oẳ" to "ă", "oẵ" to "ă", "oặ" to "ă",
@@ -85,7 +87,7 @@
         "oet" to "et", "oét" to "et", "oèt" to "et", "oẻt" to "et", "oẽt" to "et", "oẹt" to "et"
     )
 
-    val onoffglides = mapOf(
+    override val onoffglides = mapOf(
         "oe" to "ej", "oé" to "ej", "oè" to "ej", "oẻ" to "ej", "oẽ" to "ej", "oẹ" to "ej",
         "oai" to "aj", "oái" to "aj", "oài" to "aj", "oải" to "aj", "oãi" to "aj", "oại" to "aj",
         "oay" to "ăj", "oáy" to "ăj", "oày" to "ăj", "oảy" to "ăj", "oãy" to "ăj", "oạy" to "ăj",
@@ -98,10 +100,10 @@
         "uây" to "ɤ̆j", "uấy" to "ɤ̆j", "uầy" to "ɤ̆j", "uẩy" to "ɤ̆j", "uẫy" to "ɤ̆j", "uậy" to "ɤ̆j"
     )
 
-    val codas = mapOf("p" to "p", "t" to "k", "c" to "k", "m" to "m", "n" to "ŋ", "ng" to "ŋ", "nh" to "n", "ch" to "k")
+    override val codas = mapOf("p" to "p", "t" to "k", "c" to "k", "m" to "m", "n" to "ŋ", "ng" to "ŋ", "nh" to "n", "ch" to "k")
 
     // See Alves 2007 (SEALS XII), Vũ 1982
-    val tones = mapOf(
+    override val tones = mapOf(
         "á" to 13, "à" to 42, "ả" to 312, "ã" to 312, "ạ" to "21g",
         "ấ" to 13, "ầ" to 42, "ẩ" to 312, "ẫ" to 312, "ậ" to "21g",
         "ắ" to 13, "ằ" to 42, "ẳ" to 312, "ẵ" to 312, "ặ" to "21g",
@@ -118,7 +120,7 @@
 
 // used to use \u02C0 for raised glottal instead of g
 
-    val tones_p = mapOf(
+    override val tones_p = mapOf(
         "á" to 5, "à" to 2, "ả" to 4, "ã" to 4, "ạ" to 6,
         "ấ" to 5, "ầ" to 2, "ẩ" to 4, "ẫ" to 4, "ậ" to 6,
         "ắ" to 5, "ằ" to 2, "ẳ" to 4, "ẵ" to 4, "ặ" to 6,
@@ -134,7 +136,7 @@
     )
 
 
-    val gi = mapOf("gi" to "ji", "gí" to "ji", "gì" to "ji", "gì" to "ji", "gĩ" to "ji", "gị" to "ji")
+    override val gi = mapOf("gi" to "ji", "gí" to "ji", "gì" to "ji", "gì" to "ji", "gĩ" to "ji", "gị" to "ji")
 
-    val qu = mapOf("quy" to "wi", "qúy" to "wi", "qùy" to "wi", "qủy" to "wi", "qũy" to "wi", "qụy" to "wi")
+    override val qu = mapOf("quy" to "wi", "qúy" to "wi", "qùy" to "wi", "qủy" to "wi", "qũy" to "wi", "qụy" to "wi")
 }
