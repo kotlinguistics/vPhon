@@ -31,13 +31,14 @@ import sys, codecs, re, StringIO
 from optparse import OptionParser
 from string import punctuation*/
 
-fun trans(word:String, dialect:Char, glottal, pham:Boolean, cao:Boolean, palatals) {
+fun trans(word:String, dialect:Char, glottal:Boolean, pham:Boolean, cao:Boolean, palatals:Boolean) {
 
     // This looks ugly, but newer versions of python complain about "from x import *" syntax
     val rules = when (dialect) {
         'n' -> North
         'c' -> Central
         's' -> South
+        else -> throw Exception("dialect must be one of 'n', 'c', or 's'")
     }
 
     if (pham || cao) {
@@ -47,20 +48,21 @@ fun trans(word:String, dialect:Char, glottal, pham:Boolean, cao:Boolean, palatal
         tones = tones_p
     }
 
-    ons = ''
-    nuc = ''
-    cod = ''
-    ton = 0
-    oOffset = 0
-    cOffset = 0 
+    var ons = ""
+    var nuc = ""
+    var cod = ""
+    var ton = 0
+    var oOffset = 0
+    var cOffset = 0
     val l = word.length
 
-    if (l > 0) {
-        if (word[0:3] in onsets) {         // if onset is 'ngh'
-            ons = onsets[word[0:3]]
+    if(l <= 0) return
+    with (rules) {
+        if (word.substring(0, 3) in onsets) {         // if onset is 'ngh'
+            ons = onsets[word.substring(0, 3)]
             oOffset = 3
-        } else if (word[0:2] in onsets) {       // if onset is 'nh', 'gh', 'kʷ' etc
-            ons = onsets[word[0:2]]
+        } else if (word.substring(0, 2) in onsets) { // if onset is 'nh', 'gh', 'kʷ' etc
+            ons = onsets[word.substring(0, 2)]
             oOffset = 2
         } else if (word[0] in onsets) {         // if single onset
             ons = onsets[word[0]]
@@ -76,8 +78,8 @@ fun trans(word:String, dialect:Char, glottal, pham:Boolean, cao:Boolean, palatal
         }
                             
 
-        //if word[0:2] == "gi" and cod and len(word) == 3:  // if you just have 'gi' and a coda...
-        if (word[0:2] in gi && cod && len(word) == 3) {  // if you just have 'gi' and a coda...
+        //if word.substring(0, 2) == "gi" and cod and len(word) == 3:  // if you just have 'gi' and a coda...
+        if (word.substring(0, 2) in gi && cod && len(word) == 3) {  // if you just have 'gi' and a coda...
             nucl = "i"
             ons = "z"
         } else {
@@ -143,27 +145,25 @@ fun trans(word:String, dialect:Char, glottal, pham:Boolean, cao:Boolean, palatal
             }
 
             // Final palatals (Northern dialect)
-            if (nuc not in ["i", "e", "ɛ"]) {
+            if (nuc !in arrayOf("i", "e", "ɛ")) {
                 if (cod == "ɲ") { cod = "ŋ"}
-            } else if (palatals != 1 && nuc in ["i", "e", "ɛ"]) {
+            } else if (palatals != 1 && nuc in arrayOf("i", "e", "ɛ")) {
                 if (cod == "ɲ") { cod = "ŋ"}
             }
 
             if (palatals == 1) {
-                if (cod == "k" && nuc in ["i", "e", "ɛ"]) {
+                if (cod == "k" && nuc in arrayOf("i", "e", "ɛ")) {
                     cod = "c"
                 }
             }
 
         // Velar Fronting (Southern and Central dialects)
         } else {
-            if (nuc in ["i", "e"]) {
+            if (nuc in arrayOf("i", "e")) {
                 if (cod == "k") { cod = "t"}
                 if (cod == "ŋ") { cod = "n"}
-            }
-
             // There is also this reverse fronting, see Thompson 1965:94 ff.
-            } else if (nuc in ["iə", "ɯə", "uə", "u", "ɯ", "ɤ", "o", "ɔ", "ă", "ɤ̆"]) {
+            } else if (nuc in arrayOf("iə", "ɯə", "uə", "u", "ɯ", "ɤ", "o", "ɔ", "ă", "ɤ̆")) {
                 if (cod == "t") { 
                     cod = "k"
                 }
@@ -171,10 +171,10 @@ fun trans(word:String, dialect:Char, glottal, pham:Boolean, cao:Boolean, palatal
                     cod = "ŋ"
                 }
             }
-
+        }
         // Monophthongization (Southern dialects: Thompson 1965: 86; Hoàng 1985: 181)
         if (dialect == 's') {
-            if (cod in ["m", "p"]) {
+            if (cod in arrayOf("m", "p")) {
                 if (nuc == "iə") { nuc = "i"}
                 if (nuc == "uə") { nuc = "u"}
                 if (nuc == "ɯə") { nuc = "ɯ"}
@@ -202,28 +202,28 @@ fun trans(word:String, dialect:Char, glottal, pham:Boolean, cao:Boolean, palatal
         if (cOffset !=0) {
 
             // Obstruent-final nang tones are modal voice
-            if ((dialect == 'n' || dialect == 's') && ton == "21g" && cod in ['p', 't', 'k']) {
+            if ((dialect == 'n' || dialect == 's') && ton == "21g" && cod in arrayOf('p', 't', 'k')) {
                 //if ton == "21\u02C0" and cod in ['p', 't', 'k']: // fixed 8 Nov 2016
                 ton = "21"
             }
 
             // Modification for sắc in closed syllables (Northern and Central only)
-            if (((dialect == 'n' && ton == "24") || (dialect == 'c' && ton == "13")) && cod in ['p', 't', 'k']) {
+            if (((dialect == 'n' && ton == "24") || (dialect == 'c' && ton == "13")) && cod in arrayOf('p', 't', 'k')) {
                 ton = "45"
             }
 
             // Modification for 8-tone system
-            if (cao == 1) {
-                if (ton == "5" && cod in ['p', 't', 'k']) {
+            if (cao) {
+                if (ton == "5" && cod in arrayOf('p', 't', 'k')) {
                     ton = "5b"
                 }
-                if (ton == "6" && cod in ['p', 't', 'k']) {
+                if (ton == "6" && cod in arrayOf('p', 't', 'k')) {
                     ton = "6b"
                 }
             }
 
             // labialized allophony (added 17.09.08)
-            if (nuc in ["u", "o", "ɔ"]) {
+            if (nuc in arrayOf("u", "o", "ɔ")) {
                 if (cod == "ŋ") {
                     cod = "ŋ͡m"
                 }
@@ -257,8 +257,6 @@ fun convert(word, dialect, glottal, pham, cao, palatals, delimit) {
     return seq
 }
 fun main() {
-    sys.path.append('./Rules')      // make sure we can find the Rules files
-
     usage = 'python vPhon.py <input> -d, --dialect N|C|S'
 
     glottal = 0
@@ -307,7 +305,7 @@ fun main() {
     } else {
         parser.error('Please enter a valid dialect.')
     }
-    if (dialect not in ['n', 'c', 's']) {
+    if (dialect not in arrayOf('n', 'c', 's')) {
         parser.error('Please enter a valid dialect.')
     }
 
