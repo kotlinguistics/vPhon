@@ -1,3 +1,4 @@
+/**Allows the continued reference to an `options` object in vPhon's `main` function.*/
 data class Options(
     val delimit:String,
     val dialect:String,
