@@ -2,9 +2,7 @@
 import rules.North
 import rules.South
 
-//coding: utf-8
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //       vPhon.py version 0.2.6
 //       Original Work Copyright 2008-2016 James Kirby <j.kirby@ed.ac.uk>
 //       Modifications Copyright 2020 Adam Howard <github.com/medavox>
@@ -22,16 +20,14 @@ import rules.South
 //       You should have received a copy of the GNU General Public License 
 //       along with vPhon.  If not, see <http://www.gnu.org/licenses/>. 
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// for python 3-style printing:
-/*from __future__ import print_function
-
+/*
 import sys, codecs, re, StringIO
 from optparse import OptionParser
 from string import punctuation*/
 
-fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolean, palatals:Boolean) {
+fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolean, palatals:Boolean):Results? {
 
     // This looks ugly, but newer versions of python complain about "from x import *" syntax
     val rules = when (dialect) {
@@ -49,33 +45,33 @@ fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolea
     var cOffset = 0
     val l = word.length
 
-    if(l <= 0) return
+    if(l <= 0) return null
     with (rules) {
-        if (pham || cao) {
-            tones = tones_p
-        }
+        val tonez = if (pham || cao) {
+             tones_p
+        }else { tones }
         if (word.substring(0, 3) in onsets) {         // if onset is 'ngh'
             ons = onsets[word.substring(0, 3)] ?: ""
             oOffset = 3
         } else if (word.substring(0, 2) in onsets) { // if onset is 'nh', 'gh', 'kʷ' etc
             ons = onsets[word.substring(0, 2)] ?: ""
             oOffset = 2
-        } else if (word[0] in onsets) {         // if single onset
-            ons = onsets[word[0]]
+        } else if (word.ket(0) in onsets) {         // if single onset
+            ons = onsets[word.ket(0)]
             oOffset = 1
         }
 
         if (word.substring(l-2, l) in codas) {        // if two-character coda
             cod = codas[word.substring(l-2, l)]
             cOffset = 2
-        } else if (word[l-1] in codas) {        // if one-character coda
-            cod = codas[word[l-1]]
+        } else if (word.ket(l-1) in codas) {        // if one-character coda
+            cod = codas[word.ket(l-1)]
             cOffset = 1
         }
 
 
         //if word.substring(0, 2) == "gi" and cod and word.length == 3:  // if you just have 'gi' and a coda...
-        val nucl = if (word.substring(0, 2) in gi && cod.isNotEmpty() && word.length == 3) {  // if you just have 'gi' and a coda...
+        val nucl = if (word.substring(0, 2) in gi && cod?.isNotEmpty() == true && word.length == 3) {// if you just have 'gi' and a coda...
             ons = "z"
             "i"
         } else {
@@ -85,7 +81,7 @@ fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolea
         if (nucl in nuclei) {
             if (oOffset == 0) {
                 if (glottal) {
-                    if (word[0] !in onsets) {   // if there isn't an onset....
+                    if (word.ket(0) !in onsets) {   // if there isn't an onset....
                         ons = "ʔ"+nuclei[nucl] // add a glottal stop
                     } else {
                         nuc = nuclei[nucl]      // there's your nucleus
@@ -99,7 +95,7 @@ fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolea
 
         } else if (nucl in onglides && ons != "kw") { // if there is an onglide...
             nuc = onglides[nucl]                // modify the nuc accordingly
-            if (ons.isNotEmpty()) {                             // if there is an onset...
+            if (ons?.isNotEmpty() == true) {                             // if there is an onset...
                 ons = ons+"w"                  // labialize it, but...
             } else {
                 ons = "w"                      // add a labiovelar onset
@@ -107,30 +103,35 @@ fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolea
         } else if (nucl in onglides && ons == "kw") {
             nuc = onglides[nucl]
         } else if (nucl in onoffglides) {
-            cod = onoffglides[nucl][-1]
-            nuc = onoffglides[nucl]?.substring(0, -1)
+            cod = onoffglides[nucl]?.ket(-1)
+            nuc = onoffglides[nucl]?.get(0, -1)
             if (ons != "kw") {
-                if (ons.isNotEmpty()) {
+                if (ons?.isNotEmpty() == true) {
                     ons = ons+"w"
                 } else {
                     ons = "w"
                 }
             }
         } else if (nucl in offglides) {
-            cod = offglides[nucl][-1]
-            nuc = offglides[nucl].substring(0, qu[word.length-1])
+            //cod = offglides[nucl][-1]
+            cod = offglides[nucl]?.ket(-1)
+            //nuc = offglides[nucl][:-1]
+            nuc = offglides[nucl]?.get(0, -1)
 
         } else if (word in gi) {      // if word == 'gi', 'gì',...
-            ons = gi[word][0]
-            nuc = gi[word][1]
+            //ons = gi[word][0]
+            ons = gi[word]?.ket(0)
+            //nuc = gi[word][1]
+            nuc = gi[word]?.ket(1)
 
         } else if (word in qu) {      // if word == 'quy', 'qúy',...
-            ons = qu[word].substring(0, qu[word.length-1])
-            nuc = qu[word][-1]
-
+            //ons = qu[word][:-1]
+            ons = qu[word]?.get(0, -1)
+            //nuc = qu[word][-1]
+            nuc = qu[word]?.ket(-1)
         } else {
             // Something is non-Viet
-            return (None, None, None, None)
+            return null
         }
 
         // Velar Fronting (Northern dialect)
@@ -179,24 +180,22 @@ fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolea
 
         // Tones
         // Modified 20 Sep 2008 to fix aberrant 33 error
-        val tonelist = [tones[word[i]] for i in xrange(0,l) if word[i] in tones]
+        val tonelist = [tonez[word[i]] for i in 0 .. l if word[i] in tonez]
         if (tonelist != null) {
             ton = tonelist[tonelist.length-1]
-        } else {
-            if (!(pham || cao)) {
-                if (dialect == "c") {
-                    ton = "35"
-                } else {
-                    ton = "33"
-                }
+        } else if (!(pham || cao)) {
+            if (dialect == "c") {
+                ton = "35"
             } else {
-                ton = "1"
+                ton = "33"
             }
+        } else {
+            ton = "1"
         }
+
 
         // Modifications for closed syllables
         if (cOffset !=0) {
-
             // Obstruent-final nang tones are modal voice
             if ((dialect == "n" || dialect == "s") && ton == "21g" && cod in arrayOf("p", "t", "k")) {
                 //if ton == "21\u02C0" and cod in ["p", "t", "k"]: // fixed 8 Nov 2016
@@ -228,27 +227,29 @@ fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolea
                 }
             }
         }
-        return (ons, nuc, cod, ton)
+        val ons2 = ons
+        val nuc2 = nuc
+        val cod2 = cod
+        val ton2 = ton
+        if(ons2 != null && nuc2 != null && cod2 != null && ton2 != null) {
+            return Results(ons2, nuc2, cod2, ton2)
+        }else {return null}
     }
 }
 
 /**Convert a single orthographic string to IPA.*/
-fun convert(word, dialect, glottal, pham, cao, palatals, delimit) {
-    var ons = ""
-    var nuc = ""
-    var cod = ""
-    var ton = 0
-    var seq = ""
+//word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolean, palatals:Boolean
+fun convert(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolean, palatals:Boolean,
+            delimit:String):String {
 
-    try {
-        (ons, nuc, cod, ton) = trans(word, dialect, glottal, pham, cao, palatals)
-        if (None in (ons, nuc, cod, ton)) {
-            seq = "["+word+"]"
-        } else {
-            seq = delimit+delimit.join(filter(None, (ons, nuc, cod, ton)))+delimit
-        }
+    val results = trans(word, dialect, glottal, pham, cao, palatals)
+    val seq = if(results != null) {
+        val (ons, nuc, cod, ton) = results
+
+        delimit + delimit.join(filter(None, (ons, nuc, cod, ton)))+delimit
+    } else {
+        "[" + word + "]"
     }
-    catch (e:TypeError){}
 
     return seq
 }
@@ -291,21 +292,21 @@ fun main() {
     }
     if (options.output_ortho) {
         output_ortho = true
-    }
-    if (options.delimit) {
+    }/*
+    if (options.delimit.isNotEmpty()) {
         delimit = options.delimit[0]
     }
     if (options.dialect) {
-        dialect = options.dialect[0].lower()
+        dialect = options.dialect[0].toLowerCase()
     } else {
         parser.error("Please enter a valid dialect.")
     }
     if (dialect !in arrayOf("n", "c", "s")) {
         parser.error('Please enter a valid dialect.')
-    }
+    }*/
 
     // read from stdin, parse the input
-    var line = readLine()
+/*    var line = readLine()
     while (line != null) {
         if (line != "\n") {
             var compound = ""
@@ -350,6 +351,6 @@ fun main() {
             }
         }
         line = readLine()
-    }
+    }*/
 }
 
