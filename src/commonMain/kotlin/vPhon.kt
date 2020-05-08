@@ -3,22 +3,22 @@ import rules.North
 import rules.South
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//       vPhon.py version 0.2.6
+//       vPhonKotlin, based on vPhon version 0.2.6
 //       Original Work Copyright 2008-2016 James Kirby <j.kirby@ed.ac.uk>
 //       Modifications Copyright 2020 Adam Howard <github.com/medavox>
 //
-//       vPhon is free software: you can redistribute it and/or modify      
+//       vPhonKotlin is free software: you can redistribute it and/or modify
 //       it under the terms of the GNU General Public License as published by
 //       the Free Software Foundation, either version 3 of the License, or 
 //       (at your option) any later version.                  
 //
-//       vPhon is distributed in the hope that it will be useful,     
+//       vPhonKotlin is distributed in the hope that it will be useful,
 //       but WITHOUT ANY WARRANTY; without even the implied warranty of 
 //       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
 //       GNU General Public License for more details.            
 //
 //       You should have received a copy of the GNU General Public License 
-//       along with vPhon.  If not, see <http://www.gnu.org/licenses/>. 
+//       along with vPhonKotlin.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
