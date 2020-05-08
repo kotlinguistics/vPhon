@@ -180,9 +180,10 @@ fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolea
 
         // Tones
         // Modified 20 Sep 2008 to fix aberrant 33 error
-        val tonelist = [tonez[word[i]] for i in 0 .. l if word[i] in tonez]
-        if (tonelist != null) {
-            ton = tonelist[tonelist.length-1]
+        //tonelist = [tones[word[i]] for i in xrange(0,l) if word[i] in tones]
+        val tonelist = word.map { char -> tonez[char.toString()] }.filterNotNull()
+        if (tonelist.isNotEmpty()) {
+            ton = tonelist[tonelist.size-1]
         } else if (!(pham || cao)) {
             if (dialect == "c") {
                 ton = "35"
@@ -192,7 +193,6 @@ fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolea
         } else {
             ton = "1"
         }
-
 
         // Modifications for closed syllables
         if (cOffset !=0) {
