@@ -246,7 +246,7 @@ fun convert(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Bool
     val seq = if(results != null) {
         val (ons, nuc, cod, ton) = results
 
-        delimit + delimit.join(filter(None, (ons, nuc, cod, ton)))+delimit
+        delimit + arrayOf(ons, nuc, cod, ton).filterNotNull().joinToString(separator = "")+delimit
     } else {
         "[" + word + "]"
     }
