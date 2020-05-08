@@ -2,25 +2,25 @@
 import rules.North
 import rules.South
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//       vPhonKotlin, based on vPhon version 0.2.6
-//       Original Work Copyright 2008-2016 James Kirby <j.kirby@ed.ac.uk>
-//       Modifications Copyright 2020 Adam Howard <github.com/medavox>
-//
-//       vPhonKotlin is free software: you can redistribute it and/or modify
-//       it under the terms of the GNU General Public License as published by
-//       the Free Software Foundation, either version 3 of the License, or 
-//       (at your option) any later version.                  
-//
-//       vPhonKotlin is distributed in the hope that it will be useful,
-//       but WITHOUT ANY WARRANTY; without even the implied warranty of 
-//       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
-//       GNU General Public License for more details.            
-//
-//       You should have received a copy of the GNU General Public License 
-//       along with vPhonKotlin.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/***********************************************************************************************************************
+*       vPhonKotlin, based on vPhon version 0.2.6
+*       Original Work Copyright 2008-2016 James Kirby <j.kirby@ed.ac.uk>
+*       Modifications Copyright 2020 Adam Howard <github.com/medavox>
+*
+*       vPhonKotlin is free software: you can redistribute it and/or modify
+*       it under the terms of the GNU General Public License as published by
+*       the Free Software Foundation, either version 3 of the License, or
+*       (at your option) any later version.
+*
+*       vPhonKotlin is distributed in the hope that it will be useful,
+*       but WITHOUT ANY WARRANTY; without even the implied warranty of
+*       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*       GNU General Public License for more details.
+*
+*       You should have received a copy of the GNU General Public License
+*       along with vPhonKotlin.  If not, see <http://www.gnu.org/licenses/>.
+*
+***********************************************************************************************************************/
 
 /*
 import sys, codecs, re, StringIO
@@ -29,7 +29,6 @@ from string import punctuation*/
 
 fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolean, palatals:Boolean):Results? {
 
-    // This looks ugly, but newer versions of python complain about "from x import *" syntax
     val rules = when (dialect) {
         "n" -> North
         "c" -> Central
@@ -43,45 +42,42 @@ fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolea
     var ton:String? = ""
     var oOffset = 0
     var cOffset = 0
-    val l = word.length
 
-    if(l <= 0) return null
+    if(word.isEmpty()) return null
     with (rules) {
-        val tonez = if (pham || cao) {
-             tones_p
-        }else { tones }
-        if (word.substring(0, 3) in onsets) {         // if onset is 'ngh'
-            ons = onsets[word.substring(0, 3)] ?: ""
+        val tonez = if (pham || cao) tones_p else tones
+        if (word.s(0, 3) in onsets) {         // if onset is 'ngh'
+            ons = onsets[word.s(0, 3)] ?: ""
             oOffset = 3
-        } else if (word.substring(0, 2) in onsets) { // if onset is 'nh', 'gh', 'kʷ' etc
-            ons = onsets[word.substring(0, 2)] ?: ""
+        } else if (word.s(0, 2) in onsets) { // if onset is 'nh', 'gh', 'kʷ' etc
+            ons = onsets[word.s(0, 2)] ?: ""
             oOffset = 2
-        } else if (word.ket(0) in onsets) {         // if single onset
-            ons = onsets[word.ket(0)]
+        } else if (word.s(0) in onsets) {         // if single onset
+            ons = onsets[word.s(0)]
             oOffset = 1
         }
 
-        if (word.substring(l-2, l) in codas) {        // if two-character coda
-            cod = codas[word.substring(l-2, l)]
+        if (word.s(word.length-2, word.length) in codas) {        // if two-character coda
+            cod = codas[word.s(word.length-2, word.length)]
             cOffset = 2
-        } else if (word.ket(l-1) in codas) {        // if one-character coda
-            cod = codas[word.ket(l-1)]
+        } else if (word.s(word.length-1) in codas) {        // if one-character coda
+            cod = codas[word.s(word.length-1)]
             cOffset = 1
         }
 
 
         //if word.substring(0, 2) == "gi" and cod and word.length == 3:  // if you just have 'gi' and a coda...
-        val nucl = if (word.substring(0, 2) in gi && cod?.isNotEmpty() == true && word.length == 3) {// if you just have 'gi' and a coda...
+        val nucl = if (word.s(0, 2) in gi && cod?.isNotEmpty() == true && word.length == 3) {// if you just have 'gi' and a coda...
             ons = "z"
             "i"
         } else {
-            word.substring(oOffset, l-cOffset)
+            word.substring(oOffset, word.length-cOffset)
         }
 
         if (nucl in nuclei) {
             if (oOffset == 0) {
                 if (glottal) {
-                    if (word.ket(0) !in onsets) {   // if there isn't an onset....
+                    if (word.s(0) !in onsets) {   // if there isn't an onset....
                         ons = "ʔ"+nuclei[nucl] // add a glottal stop
                     } else {
                         nuc = nuclei[nucl]      // there's your nucleus
@@ -103,8 +99,8 @@ fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolea
         } else if (nucl in onglides && ons == "kw") {
             nuc = onglides[nucl]
         } else if (nucl in onoffglides) {
-            cod = onoffglides[nucl]?.ket(-1)
-            nuc = onoffglides[nucl]?.get(0, -1)
+            cod = onoffglides[nucl]?.s(-1)
+            nuc = onoffglides[nucl]?.s(0, -1)
             if (ons != "kw") {
                 if (ons?.isNotEmpty() == true) {
                     ons = ons+"w"
@@ -114,21 +110,21 @@ fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolea
             }
         } else if (nucl in offglides) {
             //cod = offglides[nucl][-1]
-            cod = offglides[nucl]?.ket(-1)
+            cod = offglides[nucl]?.s(-1)
             //nuc = offglides[nucl][:-1]
-            nuc = offglides[nucl]?.get(0, -1)
+            nuc = offglides[nucl]?.s(0, -1)
 
         } else if (word in gi) {      // if word == 'gi', 'gì',...
             //ons = gi[word][0]
-            ons = gi[word]?.ket(0)
+            ons = gi[word]?.s(0)
             //nuc = gi[word][1]
-            nuc = gi[word]?.ket(1)
+            nuc = gi[word]?.s(1)
 
         } else if (word in qu) {      // if word == 'quy', 'qúy',...
             //ons = qu[word][:-1]
-            ons = qu[word]?.get(0, -1)
+            ons = qu[word]?.s(0, -1)
             //nuc = qu[word][-1]
-            nuc = qu[word]?.ket(-1)
+            nuc = qu[word]?.s(-1)
         } else {
             // Something is non-Viet
             return null
@@ -354,3 +350,22 @@ fun main() {
     }*/
 }
 
+/**Allows the use of Python-like negative indices, which go backwards from the end of a [String].
+ * This function is for selecting substrings by `string.get(0, -1)` or `string[0, -1]`,
+ *  rather than the bulkier Kotlin `string[0, string.length-1]`.
+ *  Also casts the resultant [Char] to a [String].
+ *  The s stands for slice.*/
+private fun String.s(start:Int, end:Int):String {
+    val actualStart = if(start >= 0) start else this.length-start
+    val actualEnd = if(end >= 0) end else this.length-end
+    return this.substring(actualStart, actualEnd)
+}
+/**Allows the use of Python-like negative indices, which go backwards from the end of a [String].
+ * This function is for getting a character from a [String] by `string.ket(-1)`,
+ *  rather than the bulkier Kotlin `string[string.length-1]`.
+ *  Also casts the resultant [Char] to a [String], for convenience.
+ *  The s stands for slice.*/
+private fun String.s(index:Int):String {
+    val actualIndex = if(index >= 0) index else this.length-index
+    return this[actualIndex].toString()
+}
