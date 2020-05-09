@@ -23,6 +23,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
+                implementation("com.github.ajalt:clikt-multiplatform:2.6.0")
             }
         }
         commonTest {
