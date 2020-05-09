@@ -22,11 +22,6 @@ import rules.South
 *
 ***********************************************************************************************************************/
 
-/*
-import sys, codecs, re, StringIO
-from optparse import OptionParser
-from string import punctuation*/
-
 fun trans(word:String, dialect:String, glottal:Boolean, pham:Boolean, cao:Boolean, palatals:Boolean):Results? {
 
     val rules = when (dialect) {
