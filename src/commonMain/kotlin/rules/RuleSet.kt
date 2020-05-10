@@ -7,8 +7,8 @@ interface RuleSet {
     val onglides:Map<String, String>
     val onoffglides:Map<String, String>
     val codas:Map<String, String>
-    val tones:Map<String, Any>
-    val tones_p:Map<String, Int>
+    val tones:Map<String, String>
+    val tones_p:Map<String, String>
     val gi:Map<String, String>
     val qu:Map<String, String>
 }

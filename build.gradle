@@ -1,4 +1,5 @@
 plugins {
+    //id 'org.jetbrains.kotlin.multiplatform' version '1.4-M1'
     id 'org.jetbrains.kotlin.multiplatform' version '1.3.72'
 }
 
@@ -7,17 +8,22 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+/*    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    maven { url 'https://kotlin.bintray.com/kotlinx' }
+*/
 }
 
 kotlin {
-    /* Targets configuration omitted. 
-    *  To find out how to configure the targets, please follow the link:
+    jvm()
+    js()
+    /* To find out how to configure other targets, please follow the link:
     *  https://kotlinlang.org/docs/reference/building-mpp-with-gradle.html#setting-up-targets */
 
     sourceSets {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
+                implementation("com.github.ajalt:clikt-multiplatform:2.6.0")
             }
         }
         commonTest {
