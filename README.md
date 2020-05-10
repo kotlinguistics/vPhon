@@ -2,7 +2,7 @@
 
 Original Author: James Kirby <j.kirby@ed.ac.uk>
 
-This is a port of [James Kirby](https://github.com/kirbyj)'s [vPhon](https://github.com/kirbyj/vPhon) program to Multiplatform Kotlin.
+This is a port of [James Kirby](https://github.com/kirbyj/) 's [vPhon](https://github.com/kirbyj/vPhon) program to Multiplatform Kotlin.
 
 The remainder of the original README is below.
 
@@ -74,7 +74,7 @@ the `__future__`, `string`, `StringIO`, and `optparse` modules, all of which sho
 ## Usage
 
 vPhon takes an obligatory `-d, --dialect` option, specifying the dialect correspondence set to be used for phonetization
-([N]orthern, [C]entral, or [S]outhern). The correspondence files may be found in the `Rules/` directory, and modified as necessary.
+([N]orthern, [C]entral, or [S]outhern). The correspondence files may be found in the `rules/` directory, and modified as necessary.
 
 vPhon also takes, as an optional argument, a stream of UTF-8 text to be phonetized. If you have a file called `tuoi.txt`, for example, and want to create Southern-dialect IPA from it, either of the following will work:
 
